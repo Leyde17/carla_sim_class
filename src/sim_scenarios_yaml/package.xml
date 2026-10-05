@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>sim_scenarios_yaml</name>
+  <version>0.1.0</version>
+  <description>Lightweight, native alternative to sim_scenarios: spawns actors from a plain YAML file (blueprint, pose, trigger) using direct CARLA Python API calls, with no external scenario_runner project or OpenSCENARIO standard to learn. Ships one example (example_cone_scenario.yaml) covering all three trigger types.</description>
+  <maintainer email="leydecs17@gmail.com">Leyde Calderón Sánchez</maintainer>
+  <license>MIT</license>
+
+  <exec_depend>rclpy</exec_depend>
+  <exec_depend>nav_msgs</exec_depend>
+  <exec_depend>python3-yaml</exec_depend>
+
+  <test_depend>ament_copyright</test_depend>
+  <test_depend>ament_flake8</test_depend>
+  <test_depend>ament_pep257</test_depend>
+  <test_depend>python3-pytest</test_depend>
+
+  <export>
+    <build_type>ament_python</build_type>
+  </export>
+</package>

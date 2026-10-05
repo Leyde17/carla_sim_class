@@ -5,15 +5,24 @@ G29 wheel control, optionally followed by a custom scenario.
   ros2 launch sim_bringup sim_demo.launch.py
   ros2 launch sim_bringup sim_demo.launch.py seed:=42 num_vehicles:=20
   ros2 launch sim_bringup sim_demo.launch.py with_scenario:=true
+  ros2 launch sim_bringup sim_demo.launch.py with_yaml_scenario:=true
 
 Start a CARLA server first. The ego vehicle will not move in synchronous
 mode until the G29 node (or some other controller) starts publishing to
 /carla/<role_name>/vehicle_control_cmd -- that is expected.
 
-with_scenario:=true runs sim_scenarios' bundled example scenario
-(FollowLeadingVehicle.xosc). To run your own .xosc, launch
-`sim_scenarios run_scenario.launch.py scenario_file:=... scenario_name:=...`
-directly alongside this file instead of using with_scenario.
+Two independent, mutually compatible scenario options -- pick whichever
+fits, or neither:
+
+  with_scenario:=true       runs sim_scenarios' bundled OpenSCENARIO example
+                            (FollowLeadingVehicle.xosc) via scenario_runner.
+  with_yaml_scenario:=true  runs sim_scenarios_yaml's bundled native YAML
+                            example (example_cone_scenario.yaml), no
+                            scenario_runner required.
+
+For a custom file with either, launch that package's own run_*.launch.py
+directly instead of using these two shortcuts, which only run the bundled
+example.
 """
 
 import os
@@ -36,6 +45,7 @@ def generate_launch_description():
         DeclareLaunchArgument('num_vehicles', default_value='30'),
         DeclareLaunchArgument('num_walkers', default_value='0'),
         DeclareLaunchArgument('with_scenario', default_value='false'),
+        DeclareLaunchArgument('with_yaml_scenario', default_value='false'),
     ]
 
     ego_vehicle = IncludeLaunchDescription(
@@ -82,4 +92,16 @@ def generate_launch_description():
         condition=IfCondition(LaunchConfiguration('with_scenario')),
     )
 
-    return LaunchDescription(declarations + [ego_vehicle, traffic, g29_control, scenario])
+    yaml_scenario = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(get_package_share_directory('sim_scenarios_yaml'), 'launch', 'run_yaml_scenario.launch.py')
+        ),
+        launch_arguments={
+            'host': LaunchConfiguration('host'),
+            'port': LaunchConfiguration('port'),
+        }.items(),
+        condition=IfCondition(LaunchConfiguration('with_yaml_scenario')),
+    )
+
+    return LaunchDescription(
+        declarations + [ego_vehicle, traffic, g29_control, scenario, yaml_scenario])

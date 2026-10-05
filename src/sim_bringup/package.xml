@@ -12,6 +12,7 @@
   <exec_depend>sim_traffic</exec_depend>
   <exec_depend>g29_control</exec_depend>
   <exec_depend>sim_scenarios</exec_depend>
+  <exec_depend>sim_scenarios_yaml</exec_depend>
 
   <test_depend>ament_copyright</test_depend>
   <test_depend>ament_flake8</test_depend>

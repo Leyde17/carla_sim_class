@@ -1,0 +1,29 @@
+# Example scenario for sim_scenarios_yaml: two traffic cones placed ahead of
+# the ego's spawn point, plus one autopilot vehicle that only appears once
+# the ego has driven 25m. Archive this file alongside your results -- it is
+# the scenario definition.
+#
+# Coordinates are in CARLA's own frame (x, y, z, yaw in degrees), the same
+# convention sim_bringup's objects_lidar_only.json uses -- no ROS/CARLA axis
+# flip to worry about.
+
+actors:
+  # Spawned immediately (the default trigger).
+  - blueprint: static.prop.trafficcone01
+    spawn_point: {x: 10.0, y: 5.0, z: 0.2}
+
+  # Spawned 8 seconds after this node starts, regardless of what the ego is
+  # doing -- useful for staged "something changes mid-run" scenarios.
+  - blueprint: static.prop.trafficcone01
+    spawn_point: {x: 40.0, y: 5.0, z: 0.2, yaw: 15.0}
+    trigger: {type: time, after: 8.0}
+
+  # Spawned once the ego vehicle has travelled 25m of straight-line path
+  # length since this node started listening to its odometry. Appears with
+  # physics and autopilot on, so it drives off under the Traffic Manager
+  # rather than sitting frozen like the cones above.
+  - blueprint: vehicle.tesla.model3
+    spawn_point: {x: -20.0, y: 8.0, z: 0.3, yaw: 90.0}
+    trigger: {type: ego_distance, ego_role_name: ego_vehicle, after_m: 25.0}
+    autopilot: true
+    physics: true
