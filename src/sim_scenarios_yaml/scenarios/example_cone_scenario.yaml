@@ -21,9 +21,14 @@ actors:
   # Spawned once the ego vehicle has travelled 25m of straight-line path
   # length since this node started listening to its odometry. Appears with
   # physics and autopilot on, so it drives off under the Traffic Manager
-  # rather than sitting frozen like the cones above.
+  # rather than sitting frozen like the cones above. This pose is one of
+  # Town01's own recommended vehicle spawn points (world.get_map().
+  # get_spawn_points()[1]) rather than an arbitrary coordinate, specifically
+  # so it's known clear of static geometry -- an arbitrary (x, y, z) picked
+  # without checking the map is exactly how to get a permanent "possible
+  # collision at the spawn point" retry loop.
   - blueprint: vehicle.tesla.model3
-    spawn_point: {x: -20.0, y: 8.0, z: 0.3, yaw: 90.0}
+    spawn_point: {x: 299.4, y: 133.2, z: 0.3, yaw: 0.0}
     trigger: {type: ego_distance, ego_role_name: ego_vehicle, after_m: 25.0}
     autopilot: true
     physics: true

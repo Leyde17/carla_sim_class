@@ -142,6 +142,12 @@ class YamlScenario(Node):
         for actor in self._actors:
             if actor['spawned']:
                 continue
+            # A failed spawn (e.g. the pose collides with something) is
+            # retried, but at most once per second -- otherwise the
+            # ego_distance trigger retries on every odometry message, which
+            # can be 10-20 times a second once it's past threshold.
+            if now < actor['next_retry']:
+                continue
             trig = actor['trigger']
             ready = False
             if trig['type'] == 'immediate':
@@ -151,6 +157,7 @@ class YamlScenario(Node):
             elif trig['type'] == 'ego_distance':
                 ready = self._ego_distance.get(trig['ego_role_name'], 0.0) >= trig['after_m']
             if ready:
+                actor['next_retry'] = now + 1.0
                 self._spawn(actor)
 
     # -------------------------------------------------------------------
@@ -229,6 +236,7 @@ def _load_scenario(yaml_path):
             'physics': bool(a.get('physics', False)),
             'spawned': False,
             'actor_id': None,
+            'next_retry': 0.0,
         })
     return actors
 
