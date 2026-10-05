@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>sim_bringup</name>
+  <version>0.1.0</version>
+  <description>Top-level launch files tying the CARLA bridge, a lidar-only ego vehicle, seeded background traffic, G29 wheel control, and custom scenario playback into one minimal simulation sandbox.</description>
+  <maintainer email="leydecs17@gmail.com">Leyde Calderón Sánchez</maintainer>
+  <license>MIT</license>
+
+  <exec_depend>carla_ros_bridge</exec_depend>
+  <exec_depend>carla_spawn_objects</exec_depend>
+  <exec_depend>sim_traffic</exec_depend>
+  <exec_depend>g29_control</exec_depend>
+  <exec_depend>sim_scenarios</exec_depend>
+
+  <test_depend>ament_copyright</test_depend>
+  <test_depend>ament_flake8</test_depend>
+  <test_depend>ament_pep257</test_depend>
+  <test_depend>python3-pytest</test_depend>
+
+  <export>
+    <build_type>ament_python</build_type>
+  </export>
+</package>

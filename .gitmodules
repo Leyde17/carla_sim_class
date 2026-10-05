@@ -1,0 +1,4 @@
+[submodule "src/carla_ros"]
+	path = src/carla_ros
+	url = https://github.com/gezp/carla_ros.git
+	branch = humble-carla-0.9.14

@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>autoware_perception_msgs</name>
+  <version>0.1.0</version>
+  <description>
+    Vendored SUBSET of Autoware's `autoware_perception_msgs`: only the object
+    types this stack's detector and tracker exchange (DetectedObjects,
+    TrackedObjects and their dependencies).
+
+    Why a local copy instead of the upstream repo: the full autoware_msgs stack
+    is not installed on this Humble and pulling it in drags a large tree for
+    eight .msg files. The package NAME and the message field layout are kept
+    identical to upstream on purpose, so the type strings a subscriber sees
+    (`autoware_perception_msgs/msg/DetectedObjects`) match real Autoware and
+    the definitions can be swapped for the upstream package later without
+    touching a line of node code.
+
+    TRANSCRIBED FROM UPSTREAM, NOT COPIED FROM A CHECKOUT (no Autoware source
+    was available on this machine). Diff against
+    github.com/autowarefoundation/autoware_msgs before trusting interop with
+    external Autoware tooling: a reordered field is silently wire-incompatible.
+  </description>
+  <maintainer email="luisemilianorodriguez@gmail.com">LuisRdz2086</maintainer>
+  <license>Apache-2.0</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <buildtool_depend>rosidl_default_generators</buildtool_depend>
+
+  <depend>std_msgs</depend>
+  <depend>geometry_msgs</depend>
+  <depend>unique_identifier_msgs</depend>
+
+  <exec_depend>rosidl_default_runtime</exec_depend>
+  <member_of_group>rosidl_interface_packages</member_of_group>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

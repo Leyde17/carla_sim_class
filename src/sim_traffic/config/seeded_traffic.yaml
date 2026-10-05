@@ -1,0 +1,66 @@
+# Parameters for the seeded dynamic traffic node.
+#
+# The top-level key must match the node name set in the launch file
+# ('seeded_traffic'). If it does not, ROS 2 drops the whole block WITHOUT a
+# warning and the node aborts with a missing-parameter error.
+#
+# Floats must be written with a decimal point. `timeout: 20` is parsed as an
+# integer and will not satisfy a float parameter.
+#
+# Archive this file alongside your results: it is the scenario definition.
+
+seeded_traffic:
+  ros__parameters:
+
+    # --- connection ---------------------------------------------------
+    host: "localhost"
+    port: 2000
+    tm_port: 8000
+    timeout: 20.0
+
+    # The Traffic Manager is a CLIENT-SIDE module: it lives in the process
+    # that called get_trafficmanager(), i.e. this node. Its synchronous step
+    # is driven by world.tick() FROM THAT SAME PROCESS.
+    #
+    # This node never ticks -- the ros-bridge does, in its own process. So:
+    #   false -> TM free-runs in this node's threads. Vehicles move. Stepping
+    #            is not locked to the world tick, so identical seeds will NOT
+    #            reproduce bit-for-bit.
+    #   true  -> the TM waits forever for a step this process never issues.
+    #            Every autopilot vehicle freezes in place.
+    #
+    # Only set this true if the tick and the TM live in the same process
+    # (passive bridge, scenario runner owns world.tick()).
+    tm_synchronous_mode: false
+
+    # --- scenario identity --------------------------------------------
+    # Sweep this to generate the corpus. Everything below is held constant.
+    seed: 1234
+    num_vehicles: 30
+    num_walkers: 0
+
+    # --- actor selection ----------------------------------------------
+    vehicle_filter: "vehicle.*"
+    walker_filter: "walker.pedestrian.*"
+    exclude_bikes: true
+
+    # --- ego synchronisation ------------------------------------------
+    # Wait for the bridge to spawn the ego before placing traffic, so the
+    # spawn-point exclusion sees identical world state every run.
+    wait_for_ego: true
+    ego_role_names: ["hero", "ego_vehicle", "ego"]
+    ego_wait_timeout: 60.0
+    ego_clearance_m: 8.0
+
+    # --- Traffic Manager behaviour (deterministic given the seed) ------
+    global_distance_to_leading_vehicle: 2.5
+    global_percentage_speed_difference: 0.0
+    auto_lane_change: true
+
+    # --- pedestrians ---------------------------------------------------
+    percentage_walkers_running: 0.0
+    percentage_walkers_crossing: 0.0
+
+    # --- output --------------------------------------------------------
+    manifest_dir: "/tmp/carla_seeded_traffic"
+    report_tick_rate: true
